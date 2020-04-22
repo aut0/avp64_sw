@@ -1,0 +1,52 @@
+##############################################################################
+#                                                                            #
+# Copyright 2020 Lukas Jünger                                                #
+#                                                                            #
+# Licensed under the Apache License, Version 2.0 (the "License");            #
+# you may not use this file except in compliance with the License.           #
+# You may obtain a copy of the License at                                    #
+#                                                                            #
+#     http://www.apache.org/licenses/LICENSE-2.0                             #
+#                                                                            #
+# Unless required by applicable law or agreed to in writing, software        #
+# distributed under the License is distributed on an "AS IS" BASIS,          #
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   #
+# See the License for the specific language governing permissions and        #
+# limitations under the License.                                             #
+#                                                                            #
+##############################################################################
+
+BR2_aarch64=y
+BR2_JLEVEL=16
+BR2_TOOLCHAIN_EXTERNAL=y
+BR2_TOOLCHAIN_EXTERNAL_LINARO_AARCH64=y
+BR2_TARGET_GENERIC_HOSTNAME="avp64-dom0"
+BR2_TARGET_GENERIC_ISSUE="Welcome to AVP64 - An ARMv8 VP"
+BR2_ROOTFS_POST_IMAGE_SCRIPT="/app/files/post-image.sh"
+BR2_LINUX_KERNEL=y
+BR2_LINUX_KERNEL_CUSTOM_VERSION=y
+BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="4.19.4"
+BR2_LINUX_KERNEL_USE_CUSTOM_CONFIG=y
+BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="/app/files/avp64_linux_kernel.config"
+BR2_LINUX_KERNEL_DTS_SUPPORT=y
+BR2_LINUX_KERNEL_CUSTOM_DTS_PATH="/app/files/avp64_linux.dts /app/files/avp64_linux_dualcore.dts"
+BR2_PACKAGE_BUSYBOX_SHOW_OTHERS=y
+BR2_PACKAGE_GDB=y
+BR2_PACKAGE_STRACE=y
+BR2_PACKAGE_RNG_TOOLS=y
+BR2_PACKAGE_NODEJS=y
+BR2_PACKAGE_NODEJS_NPM=y
+BR2_PACKAGE_LIBCURL=y
+BR2_PACKAGE_CURL=y
+BR2_PACKAGE_BRIDGE_UTILS=y
+BR2_PACKAGE_LIGHTTPD=y
+BR2_PACKAGE_LIGHTTPD_PCRE=y
+BR2_PACKAGE_LYNX=y
+BR2_PACKAGE_NETCAT_OPENBSD=y
+BR2_PACKAGE_BASH=y
+BR2_TARGET_ROOTFS_CPIO=y
+BR2_TARGET_ROOTFS_CPIO_GZIP=y
+BR2_TARGET_ROOTFS_EXT2=y
+BR2_TARGET_ROOTFS_EXT2_4=y
+BR2_TARGET_ROOTFS_EXT2_SIZE="2G"
+BR2_PACKAGE_HOST_GENIMAGE=y
