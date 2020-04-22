@@ -1,0 +1,6 @@
+[submodule "linux/buildroot"]
+	path = linux/buildroot
+	url = https://github.com/buildroot/buildroot
+[submodule "linux/linux_bootcode"]
+	path = linux/linux_bootcode
+	url = https://github.com/aut0/linux-bootcode
