@@ -17,7 +17,7 @@ It was build at the Institute for Communication Techonlogies and Embedded System
     ```
     <source-dir> location of your repo copy,  e.g. /home/lukas/avp64_sw
     ```
-	
+
 4. You can find the build scripts in `<source-dir>/linux`:
     ```
     build_linux_bootcode_el1el2.sh
