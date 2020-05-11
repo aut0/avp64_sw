@@ -7,3 +7,6 @@
 [submodule "xen/xen_bootcode"]
 	path = xen/xen_bootcode
 	url = https://github.com/aut0/xen_bootcode
+[submodule "xen/buildroot"]
+	path = xen/buildroot
+	url = https://github.com/buildroot/buildroot
