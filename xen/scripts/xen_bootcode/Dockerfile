@@ -21,7 +21,7 @@ WORKDIR /app
 RUN apt-get update \
 	&& apt-get -y install build-essential \
 	wget
-RUN wget "https://releases.linaro.org/components/toolchain/binaries/latest-7/aarch64-elf/gcc-linaro-7.3.1-2018.05-x86_64_aarch64-elf.tar.xz"
-RUN tar xf gcc-linaro-7.3.1-2018.05-x86_64_aarch64-elf.tar.xz 
-ENV PATH="/app/gcc-linaro-7.3.1-2018.05-x86_64_aarch64-elf/bin:${PATH}"
+RUN wget "https://developer.arm.com/-/media/Files/downloads/gnu-a/9.2-2019.12/binrel/gcc-arm-9.2-2019.12-x86_64-aarch64-none-elf.tar.xz" 
+RUN tar xf gcc-arm-9.2-2019.12-x86_64-aarch64-none-elf.tar.xz
+ENV PATH="/app/gcc-arm-9.2-2019.12-x86_64-aarch64-none-elf/bin:${PATH}"
 ENTRYPOINT ["/app/docker_entrypoint.sh"]
