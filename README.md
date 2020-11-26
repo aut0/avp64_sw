@@ -23,6 +23,7 @@ It was build at the Institute for Communication Techonlogies and Embedded System
     build_linux_bootcode_el1el2.sh
     build_linux_bootcode_el3.sh
     build_linux_buildroot.sh
+    build_linux_nvdla_buildroot.sh
     ```
 
 5. Execute the scripts:
