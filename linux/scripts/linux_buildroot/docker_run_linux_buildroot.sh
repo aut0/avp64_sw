@@ -37,11 +37,11 @@ BUILDROOT_DIR="$DIR/../../buildroot"
 FILES_DIR="$DIR/../../files/"
 BUILD_DIR="$DIR/../../BUILD"
 
-docker run                                                                      \
-	-e APP_UID=$(id -u)                                                         \
-	-e APP_GID=$(id -g)                                                         \
-	-v "$BUILDROOT_DIR":/app/buildroot                                          \
-	-v "$FILES_DIR":/app/files                                                  \
-	-v "$BUILD_DIR":/app/build                                                  \
-	-v "$DIR/docker_entrypoint_linux_buildroot.sh":/app/docker_entrypoint.sh    \
+docker run \
+	-e APP_UID=$(id -u) \
+	-e APP_GID=$(id -g) \
+	-v "$BUILDROOT_DIR":/app/buildroot:Z \
+	-v "$FILES_DIR":/app/files:Z \
+	-v "$BUILD_DIR":/app/build:Z \
+	-v "$DIR/docker_entrypoint_linux_buildroot.sh":/app/docker_entrypoint.sh:Z \
 	avp64_linux_buildroot "$1"
