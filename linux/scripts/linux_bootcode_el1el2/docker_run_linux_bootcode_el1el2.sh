@@ -36,10 +36,10 @@ DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 BOOTCODE_SRC_DIR=$DIR/../../linux_bootcode
 BUILD_DIR=$DIR/../../BUILD
 
-docker run                                                                          \
-    -e APP_UID=$(id -u)                                                             \
-    -e APP_GID=$(id -g)                                                             \
-    -v "$BOOTCODE_SRC_DIR":/app/linux_bootcode:ro                                   \
-    -v "$BUILD_DIR":/app/build                                                      \
-    -v "$DIR/docker_entrypoint_linux_bootcode_el1el2.sh":/app/docker_entrypoint.sh  \
+docker run \
+    -e APP_UID=$(id -u) \
+    -e APP_GID=$(id -g) \
+    -v "$BOOTCODE_SRC_DIR":/app/linux_bootcode:ro,Z \
+    -v "$BUILD_DIR":/app/build:Z \
+    -v "$DIR/docker_entrypoint_linux_bootcode_el1el2.sh":/app/docker_entrypoint.sh:Z \
     avp64_linux_bootcode_el1el2 "$1"
