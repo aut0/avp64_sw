@@ -131,6 +131,24 @@ amba {
 			clock-names = "iface", "core";
 		};
 
+		spi: spi@10147000 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			compatible = "opencores,tiny-spi-rtlsvn2";
+			reg = <0x10147000 0x2000>;
+			interrupts = <0 11 4>;
+			gpios = <&gpio0 0 0>;
+			clock-frequency = <24000000>
+			baud-width = <32>;
+		};
+
+		gpio0: gpio@10149000 {
+			compatible = "brcm,bcm6345-gpio";
+			reg = <0x10149000 4>;
+			reg-names = "dat";
+			gpio-controller;
+			#gpio-cells = <2>;
+		};
 	};
 
 	v2m_clk24mhz: clk24mhz {
