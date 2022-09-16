@@ -36,10 +36,19 @@ DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 BOOTCODE_SRC_DIR=$DIR/../../linux_bootcode
 BUILD_DIR=$DIR/../../BUILD
 
+DOCKER_FLAGS=""
+
+if [[ "$(docker --version)" == *"podman"* ]]; then
+    echo "Using podman"
+    DOCKER_FLAGS="--userns keep-id"
+else
+    echo "Using docker"
+    DOCKER_FLAGS="--user $(id -u):$(id -g)"
+fi
+
 docker run \
     --rm \
-    -e APP_UID=$(id -u) \
-    -e APP_GID=$(id -g) \
+    $DOCKER_FLAGS \
     -v "$BOOTCODE_SRC_DIR":/app/linux_bootcode:ro,Z \
     -v "$BUILD_DIR":/app/build:Z \
     -v "$DIR/docker_entrypoint_linux_bootcode_el1el2.sh":/app/docker_entrypoint.sh:Z \

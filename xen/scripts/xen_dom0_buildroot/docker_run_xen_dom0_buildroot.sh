@@ -37,10 +37,19 @@ BUILDROOT_DIR="$DIR/../../buildroot"
 FILES_DIR="$DIR/../../files/"
 BUILD_DIR="$DIR/../../BUILD"
 
+DOCKER_FLAGS=""
+
+if [[ "$(docker --version)" == *"podman"* ]]; then
+    echo "Using podman"
+    DOCKER_FLAGS="--userns keep-id"
+else
+    echo "Using docker"
+    DOCKER_FLAGS="--user $(id -u):$(id -g)"
+fi
+
 docker run \
      --rm \
-	-e APP_UID=$(id -u) \
-	-e APP_GID=$(id -g) \
+    $DOCKER_FLAGS \
 	-v $BUILDROOT_DIR:/app/buildroot \
 	-v $BUILD_DIR:/app/build \
 	-v $FILES_DIR:/app/files \

@@ -36,10 +36,19 @@ DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 BUILD_DIR="$DIR/../../BUILD"
 SD_DIR="$DIR/../../xen_sdcard_image"
 
+DOCKER_FLAGS=""
+
+if [[ "$(docker --version)" == *"podman"* ]]; then
+    echo "Using podman"
+    DOCKER_FLAGS="--userns keep-id"
+else
+    echo "Using docker"
+    DOCKER_FLAGS="--user $(id -u):$(id -g)"
+fi
+
 docker run                                                                      \
     --rm                                                                        \
-	-e APP_UID=$(id -u)                                                         \
-	-e APP_GID=$(id -g)                                                         \
+    $DOCKER_FLAGS                                                               \
 	-v "$BUILD_DIR":/app/build                                                  \
 	-v "$SD_DIR":/app/sdcard:ro                                                 \
 	-v "$DIR/docker_entrypoint_xen_sdcard_image.sh":/app/docker_entrypoint.sh   \
