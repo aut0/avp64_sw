@@ -38,6 +38,7 @@ FILES_DIR="$DIR/../../files/"
 BUILD_DIR="$DIR/../../BUILD"
 
 docker run \
+	--rm \
 	-e APP_UID=$(id -u) \
 	-e APP_GID=$(id -g) \
 	-v "$BUILDROOT_DIR":/app/buildroot:Z \

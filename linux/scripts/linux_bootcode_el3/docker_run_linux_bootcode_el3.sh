@@ -37,6 +37,7 @@ BOOTCODE_SRC_DIR=$DIR/../../linux_bootcode
 BUILD_DIR=$DIR/../../BUILD
 
 docker run \
+    --rm \
     -e APP_UID=$(id -u) \
     -e APP_GID=$(id -g) \
     -v "$BOOTCODE_SRC_DIR":/app/linux_bootcode:ro,Z \

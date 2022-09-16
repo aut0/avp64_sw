@@ -37,6 +37,7 @@ BUILD_DIR="$DIR/../../BUILD"
 SD_DIR="$DIR/../../xen_sdcard_image"
 
 docker run                                                                      \
+    --rm                                                                        \
 	-e APP_UID=$(id -u)                                                         \
 	-e APP_GID=$(id -g)                                                         \
 	-v "$BUILD_DIR":/app/build                                                  \
