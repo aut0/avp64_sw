@@ -23,11 +23,6 @@ if [ "$1" == "build" ]; then
 	echo "Building AVP64 Xen bootcode"
 	mkdir -p /app/build/xen_bootcode
 	make -C /app/xen_bootcode/xen_boot O=/app/build/xen_bootcode
-	# Add UID and GID from user outside container
-	groupadd -g $APP_GID appgroup
-	useradd -c 'container user' -u $APP_UID -g $APP_GID appuser
-	# Change ownership of files to non-root
-	chown -R $APP_UID:$APP_GID /app/build/xen_bootcode
 elif [ "$1" == "clean" ]; then
 	echo "Cleaning AVP64 Xen bootcode"
 	make -C /app/xen_bootcode/xen_boot O=/app/build/xen_bootcode clean

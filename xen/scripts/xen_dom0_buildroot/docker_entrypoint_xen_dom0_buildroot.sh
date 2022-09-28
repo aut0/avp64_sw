@@ -25,13 +25,6 @@ if [ "$1" == "build" ]; then
 	export BR2_DEFCONFIG=/app/files/avp64-xen-dom0-defconfig
 	make O=/app/build/buildroot/output/dom0 -C /app/buildroot/ defconfig
 	make O=/app/build/buildroot/output/dom0 -C /app/buildroot/ all
-
-	# Add UID and GID from user outside container
-	groupadd -g $APP_GID appgroup
-	useradd -c 'container user' -u $APP_UID -g $APP_GID appuser
-	# Change ownership of files to non-root
-	chown -R $APP_UID:$APP_GID /app/build/buildroot
-	chown -R $APP_UID:$APP_GID /app/buildroot
 elif [ "$1" == "clean" ]; then
 	echo "Cleaning AVP64 Xen buildroot"
 	# Clean buildroot for dom0

@@ -23,11 +23,6 @@ if [ "$1" == "build" ]; then
     echo "Building EL1/EL2 Linux bootcode"
     mkdir -p /app/build/linux_bootcode/el1el2
     make -C /app/linux_bootcode/el1el2 O=/app/build/linux_bootcode/el1el2
-    # Add UID and GID from user outside container
-    groupadd -g $APP_GID appgroup
-    useradd -c 'container user' -u $APP_UID -g $APP_GID appuser
-    # Change ownership of files to non-root
-    chown -R $APP_UID:$APP_GID /app/build/linux_bootcode
 elif [ "$1" == "clean" ]; then
     echo "Cleaning EL1/EL2 Linux bootcode"
     make -C /app/linux_bootcode/el1el2 O=/app/build/linux_bootcode/el1el2 clean
