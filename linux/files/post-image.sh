@@ -29,3 +29,6 @@ genimage \
   --inputpath "${BINARIES_DIR}" \
   --outputpath "${BINARIES_DIR}" \
   --config "${GENIMAGE_CFG}"
+
+# compile device trees
+make -C /app/files/dt O=/app/build/buildroot/output/dt
