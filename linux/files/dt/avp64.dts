@@ -1,6 +1,6 @@
 /******************************************************************************
  *                                                                            *
- * Copyright 2020 Lukas Jünger                                                *
+ * Copyright 2023 Lukas Jünger, Nils Bosbach                                  *
  *                                                                            *
  * Licensed under the Apache License, Version 2.0 (the "License");            *
  * you may not use this file except in compliance with the License.           *
@@ -15,6 +15,10 @@
  * limitations under the License.                                             *
  *                                                                            *
  ******************************************************************************/
+
+#ifndef NRCPU
+#error NRCPU undefined
+#endif
 
 /dts-v1/;
 
@@ -42,6 +46,7 @@
 			reg = <0x0 0x0>;
 		};
 
+#if NRCPU > 1
 		cpu1: cpu@1 {
 			device_type = "cpu";
 			compatible = "arm,armv8";
@@ -49,6 +54,53 @@
 			cpu-release-addr = <0x0 0x00004000>;
 			reg = <0x0 0x1>;
 		};
+#if NRCPU > 2
+		cpu2: cpu@2 {
+			device_type = "cpu";
+			compatible = "arm,armv8";
+			enable-method = "spin-table";
+			cpu-release-addr = <0x0 0x00004000>;
+			reg = <0x0 0x2>;
+		};
+		cpu3: cpu@3 {
+			device_type = "cpu";
+			compatible = "arm,armv8";
+			enable-method = "spin-table";
+			cpu-release-addr = <0x0 0x00004000>;
+			reg = <0x0 0x3>;
+		};
+#if NRCPU > 4
+		cpu4: cpu@4 {
+			device_type = "cpu";
+			compatible = "arm,armv8";
+			enable-method = "spin-table";
+			cpu-release-addr = <0x0 0x00004000>;
+			reg = <0x0 0x4>;
+		};
+		cpu5: cpu@5 {
+			device_type = "cpu";
+			compatible = "arm,armv8";
+			enable-method = "spin-table";
+			cpu-release-addr = <0x0 0x00004000>;
+			reg = <0x0 0x5>;
+		};
+		cpu6: cpu@6 {
+			device_type = "cpu";
+			compatible = "arm,armv8";
+			enable-method = "spin-table";
+			cpu-release-addr = <0x0 0x00004000>;
+			reg = <0x0 0x6>;
+		};
+		cpu7: cpu@7 {
+			device_type = "cpu";
+			compatible = "arm,armv8";
+			enable-method = "spin-table";
+			cpu-release-addr = <0x0 0x00004000>;
+			reg = <0x0 0x7>;
+		};
+#endif // NRCPU > 4
+#endif // NRCPU > 2
+#endif // NRCPU > 1
 	};
 
 	chosen {
@@ -138,6 +190,30 @@ amba {
 			clock-names = "iface", "core";
 		};
 
+		spi: spi@10147000 {
+			#address-cells = <0x1>;
+			#size-cells = <0x0>;
+			compatible = "opencores,tiny-spi-rtlsvn2";
+			reg = <0x10147000 0x2000>;
+			//interrupts = <0 11 4>;
+			gpios = <&gpio0 0 0>;
+			clock-frequency = <24000000>;
+			baud-width = <32>;
+
+			temp-sensor0@0 {
+				compatible = "maxim,max31855";
+				reg = <0>;
+				spi-max-frequency = <4300000>;
+			};
+		};
+
+		gpio0: gpio@10149000 {
+			compatible = "brcm,bcm6345-gpio";
+			reg = <0x10149000 4>;
+			reg-names = "dat";
+			gpio-controller;
+			#gpio-cells = <2>;
+		};
 	};
 
 	v2m_clk24mhz: clk24mhz {
