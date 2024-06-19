@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/bin/env bash
 ##############################################################################
 #                                                                            #
-# Copyright 2020 Lukas Jünger                                                #
+# Copyright 2024 Lukas Jünger, Nils Bosbach                                  #
 #                                                                            #
 # Licensed under the Apache License, Version 2.0 (the "License");            #
 # you may not use this file except in compliance with the License.           #
@@ -22,7 +22,7 @@ set -euo pipefail
 # Get directory of script itself
 SOURCE="${BASH_SOURCE[0]}"
 # resolve $SOURCE until the file is no longer a symlink
-while [ -h "$SOURCE" ]; do 
+while [ -h "$SOURCE" ]; do
 	DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 	SOURCE="$(readlink "$SOURCE")"
 	# if $SOURCE was a relative symlink, we need to resolve it relative to the
@@ -31,7 +31,6 @@ while [ -h "$SOURCE" ]; do
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 
-mkdir -p $DIR/BUILD
 # Build Linux buildroot
 docker build  --tag avp64_linux_buildroot "$DIR/scripts/linux_buildroot"
-"$DIR/scripts/linux_buildroot/docker_run_linux_buildroot.sh" build
+"$DIR/scripts/linux_buildroot/docker_run_linux_buildroot.sh" build default

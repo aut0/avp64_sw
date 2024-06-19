@@ -17,49 +17,26 @@
 #                                                                            #
 ##############################################################################
 
-# Pass "clean" or "build" to this script to build/clean AVP64 Linux buildroot
-
 set -euo pipefail
 
-# Get directory of script itself
-SOURCE="${BASH_SOURCE[0]}"
-# resolve $SOURCE until the file is no longer a symlink
-while [ -h "$SOURCE" ]; do
-	DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
-	SOURCE="$(readlink "$SOURCE")"
-	# if $SOURCE was a relative symlink, we need to resolve it relative to the
-	# path where the symlink file was located
-	[[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
-done
-DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
-
-BUILDROOT_DIR="$DIR/../../buildroot"
-BOOTCODE_DIR="$DIR/../../linux_bootcode"
-IMAGES_DIR="$DIR/../../../images"
-FILES_DIR="$DIR/../../files/"
-BUILD_DIR="$DIR/../../BUILD"
-
-DOCKER_FLAGS=""
-
-if [[ "$(docker --version)" == *"podman"* ]]; then
-    echo "Using podman"
-    DOCKER_FLAGS="--userns keep-id"
+if [ "$1" == "build" ]; then
+	echo "Building AVP64 Xen buildroot"
+	# Run buildroot for dom0
+	export BR2_DEFCONFIG=/app/files/avp64-xen-dom0-defconfig
+	make O=/app/build/buildroot/output/dom0 -C /app/buildroot/ defconfig
+	make O=/app/build/buildroot/output/dom0 -C /app/buildroot/ all
+	# Run buildroot for dom1
+	export BR2_DEFCONFIG=/app/files/avp64-xen-dom1-defconfig
+	make O=/app/build/buildroot/output/dom1 -C /app/buildroot/ defconfig
+	make O=/app/build/buildroot/output/dom1 -C /app/buildroot/ all
+elif [ "$1" == "clean" ]; then
+	echo "Cleaning AVP64 Xen buildroot"
+	# Clean buildroot for dom0
+	export BR2_DEFCONFIG=/app/files/avp64-xen-dom0-defconfig
+	make O=/app/build/buildroot/output/dom0 -C /app/buildroot/ clean
+	# Clean buildroot for dom1
+	export BR2_DEFCONFIG=/app/files/avp64-xen-dom1-defconfig
+	make O=/app/build/buildroot/output/dom1 -C /app/buildroot/ clean
 else
-    echo "Using docker"
-    DOCKER_FLAGS="--user $(id -u):$(id -g)"
+	echo "Unsupported argument"
 fi
-
-mkdir -p "${BUILD_DIR}"
-mkdir -p "${IMAGES_DIR}"
-
-docker run \
-    --rm \
-    $DOCKER_FLAGS \
-	-v "$BUILDROOT_DIR":/app/buildroot:Z \
-	-v "$BOOTCODE_DIR":/app/bootcode:ro,Z \
-	-v "$IMAGES_DIR":/app/images:Z \
-	-v "$FILES_DIR":/app/files:ro,Z \
-	-v "$BUILD_DIR":/app/build:Z \
-	-v "$FILES_DIR/overlay_$2":/app/overlay:ro,Z \
-	-v "$DIR/docker_entrypoint_linux_buildroot.sh":/app/docker_entrypoint.sh:ro,Z \
-	avp64_linux_buildroot "$1" "$2"

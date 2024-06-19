@@ -1,7 +1,6 @@
-#!/bin/bash
 ##############################################################################
 #                                                                            #
-# Copyright 2022 Nils Bosbach, Lukas Jünger                                  #
+# Copyright 2020 Lukas Jünger                                                #
 #                                                                            #
 # Licensed under the Apache License, Version 2.0 (the "License");            #
 # you may not use this file except in compliance with the License.           #
@@ -17,17 +16,27 @@
 #                                                                            #
 ##############################################################################
 
-set -euo pipefail
+CC     := aarch64-none-elf-gcc
+OC     := aarch64-none-elf-objcopy
+CFLAGS := -Wl,--build-id=none -T link.ld -nostdlib
 
-if [ "$1" == "build" ]; then
-    echo "Building $2"
-    mkdir -p /app/build/$2
-    make -C /app/benchmark/$2 O=/app/build/$2
-    /app/postprocess.bash $2
-elif [ "$1" == "clean" ]; then
-    echo "Cleaning $2"
-    make -C /app/benchmark/$2 O=/app/build/$2 clean
-    rm -rf /app/build/$2
-else
-    echo "Unsupported argument"
-fi
+ELFBIN := boot.elf
+RAWBIN := boot.bin
+
+.PHONY: all clean
+
+all: dirs $(O)/$(RAWBIN)
+
+clean:
+	$(RM) $(O)/$(RAWBIN) $(O)/$(ELFBIN)
+
+dirs: $(O)
+
+$(O):
+	mkdir -p $(O)
+
+$(O)/$(RAWBIN): $(O)/$(ELFBIN)
+	$(OC) -O binary $< $@
+
+$(O)/$(ELFBIN): boot.S
+	$(CC) $(CFLAGS) $< -o $@

@@ -1,7 +1,6 @@
-#!/bin/bash
 ##############################################################################
 #                                                                            #
-# Copyright 2022 Nils Bosbach, Lukas Jünger                                  #
+# Copyright 2020 Lukas Jünger                                                #
 #                                                                            #
 # Licensed under the Apache License, Version 2.0 (the "License");            #
 # you may not use this file except in compliance with the License.           #
@@ -17,17 +16,23 @@
 #                                                                            #
 ##############################################################################
 
-set -euo pipefail
-
-if [ "$1" == "build" ]; then
-    echo "Building $2"
-    mkdir -p /app/build/$2
-    make -C /app/benchmark/$2 O=/app/build/$2
-    /app/postprocess.bash $2
-elif [ "$1" == "clean" ]; then
-    echo "Cleaning $2"
-    make -C /app/benchmark/$2 O=/app/build/$2 clean
-    rm -rf /app/build/$2
-else
-    echo "Unsupported argument"
-fi
+FROM ubuntu:jammy
+WORKDIR /app
+RUN apt-get update \
+	&& apt-get -y install build-essential \
+	libncurses-dev \
+	file \
+	wget \
+	cpio \
+	python3 \
+	unzip \
+	rsync \
+	bc \
+	git \
+	libssl-dev \
+	device-tree-compiler \
+	gcc-aarch64-linux-gnu
+RUN wget "https://developer.arm.com/-/media/Files/downloads/gnu-a/9.2-2019.12/binrel/gcc-arm-9.2-2019.12-x86_64-aarch64-none-elf.tar.xz" 
+RUN tar xf gcc-arm-9.2-2019.12-x86_64-aarch64-none-elf.tar.xz
+ENV PATH="/app/gcc-arm-9.2-2019.12-x86_64-aarch64-none-elf/bin:${PATH}"
+ENTRYPOINT ["/app/docker_entrypoint.sh"]

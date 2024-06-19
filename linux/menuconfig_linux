@@ -1,0 +1,32 @@
+#!/bin/env bash
+
+set -e
+# Get directory of script itself
+SOURCE="${BASH_SOURCE[0]}"
+# resolve $SOURCE until the file is no longer a symlink
+while [ -h "$SOURCE" ]; do
+        DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+        SOURCE="$(readlink "$SOURCE")"
+        # if $SOURCE was a relative symlink, we need to resolve it relative to the
+        # path where the symlink file was located
+        [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+
+LINUX_CONFIG_FILE="${DIR}/files/avp64_linux_kernel.config"
+BUILDROOT_DIR="${DIR}/buildroot"
+LINUX_DIR="${BUILDROOT_DIR}/output/build/linux-6.5.6"
+
+if [ ! -d "${LINUX_DIR}" ]; then
+    pushd "${BUILDROOT_DIR}" > /dev/null
+    make linux-menuconfig
+    popd > /dev/null
+fi;
+
+cp "${LINUX_CONFIG_FILE}" "${LINUX_DIR}/.config"
+
+pushd "${LINUX_DIR}" > /dev/null
+make menuconfig ARCH=arm64
+popd > /dev/null
+
+cp "${LINUX_DIR}/.config" "${LINUX_CONFIG_FILE}"

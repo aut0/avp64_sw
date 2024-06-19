@@ -1,7 +1,7 @@
 O   ?= .
 CPP ?= cpp
 DTC ?= dtc
-NVDLA ?= 0
+LINUX_IMAGE_SIZE ?= 0
 
 CPPFLAGS := -nostdinc -undef -x assembler-with-cpp
 
@@ -18,19 +18,19 @@ ${O}/%.dtb: ${O}/%.dts
 
 ${O}/avp64x1.dts: avp64.dts
 	@mkdir -p ${O}
-	$(CPP) $(CPPFLAGS) -D NRCPU=1 -D NVDLA=${NVDLA} -o $@ $<
+	$(CPP) $(CPPFLAGS) -D NRCPU=1 -D LINUX_IMAGE_SIZE=${LINUX_IMAGE_SIZE} -o $@ $<
 
 ${O}/avp64x2.dts: avp64.dts
 	@mkdir -p ${O}
-	$(CPP) $(CPPFLAGS) -D NRCPU=2 -D NVDLA=${NVDLA} -o $@ $<
+	$(CPP) $(CPPFLAGS) -D NRCPU=2 -D LINUX_IMAGE_SIZE=${LINUX_IMAGE_SIZE} -o $@ $<
 
 ${O}/avp64x4.dts: avp64.dts
 	@mkdir -p ${O}
-	$(CPP) $(CPPFLAGS) -D NRCPU=4 -D NVDLA=${NVDLA} -o $@ $<
+	$(CPP) $(CPPFLAGS) -D NRCPU=4 -D LINUX_IMAGE_SIZE=${LINUX_IMAGE_SIZE} -o $@ $<
 
 ${O}/avp64x8.dts: avp64.dts
 	@mkdir -p ${O}
-	$(CPP) $(CPPFLAGS) -D NRCPU=8 -D NVDLA=${NVDLA} -o $@ $<
+	$(CPP) $(CPPFLAGS) -D NRCPU=8 -D LINUX_IMAGE_SIZE=${LINUX_IMAGE_SIZE} -o $@ $<
 
 .PHONY: all clean
 .INTERMEDIATE: $(OBJ:dtb=dts)
