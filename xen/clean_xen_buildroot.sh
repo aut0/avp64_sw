@@ -17,8 +17,6 @@
 #                                                                            #
 ##############################################################################
 
-# Pass "clean" or "build" to this script to build/clean AVP64 Linux buildroot
-
 set -euo pipefail
 
 # Get directory of script itself
@@ -33,33 +31,4 @@ while [ -h "$SOURCE" ]; do
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 
-BUILDROOT_DIR="$DIR/../../buildroot"
-BOOTCODE_DIR="$DIR/../../linux_bootcode"
-IMAGES_DIR="$DIR/../../../images"
-FILES_DIR="$DIR/../../files/"
-BUILD_DIR="$DIR/../../BUILD"
-
-DOCKER_FLAGS=""
-
-if [[ "$(docker --version)" == *"podman"* ]]; then
-    echo "Using podman"
-    DOCKER_FLAGS="--userns keep-id"
-else
-    echo "Using docker"
-    DOCKER_FLAGS="--user $(id -u):$(id -g)"
-fi
-
-mkdir -p "${BUILD_DIR}"
-mkdir -p "${IMAGES_DIR}"
-
-docker run \
-    --rm \
-    $DOCKER_FLAGS \
-	-v "$BUILDROOT_DIR":/app/buildroot:Z \
-	-v "$BOOTCODE_DIR":/app/bootcode:ro,Z \
-	-v "$IMAGES_DIR":/app/images:Z \
-	-v "$FILES_DIR":/app/files:ro,Z \
-	-v "$BUILD_DIR":/app/build:Z \
-	-v "$FILES_DIR/overlay_$2":/app/overlay:ro,Z \
-	-v "$DIR/docker_entrypoint_linux_buildroot.sh":/app/docker_entrypoint.sh:ro,Z \
-	avp64_linux_buildroot "$1" "$2"
+"$DIR/scripts/xen_buildroot/docker_run_xen_buildroot.sh" clean

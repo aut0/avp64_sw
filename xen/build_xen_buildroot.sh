@@ -17,14 +17,12 @@
 #                                                                            #
 ##############################################################################
 
-# Pass "clean" or "build" to this script to build/clean AVP64 Linux buildroot
-
 set -euo pipefail
 
 # Get directory of script itself
 SOURCE="${BASH_SOURCE[0]}"
 # resolve $SOURCE until the file is no longer a symlink
-while [ -h "$SOURCE" ]; do
+while [ -h "$SOURCE" ]; do 
 	DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 	SOURCE="$(readlink "$SOURCE")"
 	# if $SOURCE was a relative symlink, we need to resolve it relative to the
@@ -33,33 +31,7 @@ while [ -h "$SOURCE" ]; do
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 
-BUILDROOT_DIR="$DIR/../../buildroot"
-BOOTCODE_DIR="$DIR/../../linux_bootcode"
-IMAGES_DIR="$DIR/../../../images"
-FILES_DIR="$DIR/../../files/"
-BUILD_DIR="$DIR/../../BUILD"
-
-DOCKER_FLAGS=""
-
-if [[ "$(docker --version)" == *"podman"* ]]; then
-    echo "Using podman"
-    DOCKER_FLAGS="--userns keep-id"
-else
-    echo "Using docker"
-    DOCKER_FLAGS="--user $(id -u):$(id -g)"
-fi
-
-mkdir -p "${BUILD_DIR}"
-mkdir -p "${IMAGES_DIR}"
-
-docker run \
-    --rm \
-    $DOCKER_FLAGS \
-	-v "$BUILDROOT_DIR":/app/buildroot:Z \
-	-v "$BOOTCODE_DIR":/app/bootcode:ro,Z \
-	-v "$IMAGES_DIR":/app/images:Z \
-	-v "$FILES_DIR":/app/files:ro,Z \
-	-v "$BUILD_DIR":/app/build:Z \
-	-v "$FILES_DIR/overlay_$2":/app/overlay:ro,Z \
-	-v "$DIR/docker_entrypoint_linux_buildroot.sh":/app/docker_entrypoint.sh:ro,Z \
-	avp64_linux_buildroot "$1" "$2"
+mkdir -p $DIR/BUILD
+# Build Xen rootfs
+docker build  --tag avp64_xen_buildroot "$DIR/scripts/xen_buildroot"
+"$DIR/scripts/xen_buildroot/docker_run_xen_buildroot.sh" build

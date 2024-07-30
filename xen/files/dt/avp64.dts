@@ -20,9 +20,8 @@
 #error NRCPU undefined
 #endif
 
-
-#ifndef NVDLA
-#define NVDLA 0
+#ifndef LINUX_IMAGE_SIZE
+#error LINUX_IMAGE_SIZE undefined
 #endif
 
 #define IRQ_TYPE_LEVEL_HIGH 4
@@ -55,6 +54,8 @@
         cpu0: cpu@0 {
             device_type = "cpu";
             compatible = "arm,armv8";
+            enable-method = "spin-table";
+			cpu-release-addr = <0x0 0x00000090>;
             reg = <0x0 0x0>;
         };
 
@@ -63,7 +64,7 @@
             device_type = "cpu";
             compatible = "arm,armv8";
             enable-method = "spin-table";
-            cpu-release-addr = <0x0 0x00004000>;
+            cpu-release-addr = <0x0 0x00000090>;
             reg = <0x0 0x1>;
         };
 #if NRCPU > 2
@@ -71,14 +72,14 @@
             device_type = "cpu";
             compatible = "arm,armv8";
             enable-method = "spin-table";
-            cpu-release-addr = <0x0 0x00004000>;
+            cpu-release-addr = <0x0 0x00000090>;
             reg = <0x0 0x2>;
         };
         cpu3: cpu@3 {
             device_type = "cpu";
             compatible = "arm,armv8";
             enable-method = "spin-table";
-            cpu-release-addr = <0x0 0x00004000>;
+            cpu-release-addr = <0x0 0x00000090>;
             reg = <0x0 0x3>;
         };
 #if NRCPU > 4
@@ -86,28 +87,28 @@
             device_type = "cpu";
             compatible = "arm,armv8";
             enable-method = "spin-table";
-            cpu-release-addr = <0x0 0x00004000>;
+            cpu-release-addr = <0x0 0x00000090>;
             reg = <0x0 0x4>;
         };
         cpu5: cpu@5 {
             device_type = "cpu";
             compatible = "arm,armv8";
             enable-method = "spin-table";
-            cpu-release-addr = <0x0 0x00004000>;
+            cpu-release-addr = <0x0 0x00000090>;
             reg = <0x0 0x5>;
         };
         cpu6: cpu@6 {
             device_type = "cpu";
             compatible = "arm,armv8";
             enable-method = "spin-table";
-            cpu-release-addr = <0x0 0x00004000>;
+            cpu-release-addr = <0x0 0x00000090>;
             reg = <0x0 0x6>;
         };
         cpu7: cpu@7 {
             device_type = "cpu";
             compatible = "arm,armv8";
             enable-method = "spin-table";
-            cpu-release-addr = <0x0 0x00004000>;
+            cpu-release-addr = <0x0 0x00000090>;
             reg = <0x0 0x7>;
         };
 #endif // NRCPU > 4
@@ -116,13 +117,19 @@
     };
 
     chosen {
-        bootargs = "earlycon console=ttyAMA0 root=/dev/mmcblk0p1 rootwait debug";
-        stdout-path = "/amba/uart@10009000";
+        #address-cells = <1>;
+        #size-cells = <1>;
+        xen,xen-bootargs = "dtuart=serial0 console=dtuart dom0_mem=512M loglvl=none guest_loglvl=none";
+        xen,dom0-bootargs = "earlycon=xenboot console=hvc0 earlyprintk=xen debug loglevel=8 root=/dev/mmcblk0p2 rootwait";
+        module@7f600000 {
+            compatible = "multiboot,kernel", "multiboot,module";
+            reg = <0x7f600000 LINUX_IMAGE_SIZE>;
+        };
     };
 
     memory@0 {
         device_type= "memory";
-        reg = <0x0 0x00000000 0x0 0x10000000>;
+        reg = <0x0 0x00000000 0x0 0x80000000>;
     };
 
     timer {
@@ -141,79 +148,79 @@
         compatible = "arm,amba-bus", "simple-bus";
         ranges;
 
-        rng: rng@10007000 {
+        rng: rng@90007000 {
             compatible = "timeriomem_rng";
-            reg = <0x0 0x10007000 0x0 0x4>;
+            reg = <0x0 0x90007000 0x0 0x4>;
             quality = <1000>;
             period = <0>;
         };
 
-        v2m_serial0: uart@10009000 {
+        v2m_serial0: uart@90009000 {
             compatible = "arm,pl011", "arm,primecell";
-            reg = <0x0 0x10009000 0x0 0x1000>;
+            reg = <0x0 0x90009000 0x0 0x1000>;
             interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
             clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
             clock-names = "uartclk", "apb_pclk";
         };
 
-        v2m_serial1: uart@1000a000 {
+        v2m_serial1: uart@9000a000 {
             compatible = "arm,pl011", "arm,primecell";
-            reg = <0x0 0x1000a000 0x0 0x1000>;
+            reg = <0x0 0x9000a000 0x0 0x1000>;
             interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
             clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
             clock-names = "uartclk", "apb_pclk";
         };
 
-        v2m_serial2: uart@1000b000 {
+        v2m_serial2: uart@9000b000 {
             compatible = "arm,pl011", "arm,primecell";
-            reg = <0x0 0x1000b000 0x0 0x1000>;
+            reg = <0x0 0x9000b000 0x0 0x1000>;
             interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
             clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
             clock-names = "uartclk", "apb_pclk";
         };
 
-        v2m_serial3: uart@1000c000 {
+        v2m_serial3: uart@9000c000 {
             compatible = "arm,pl011", "arm,primecell";
-            reg = <0x0 0x1000c000 0x0 0x1000>;
+            reg = <0x0 0x9000c000 0x0 0x1000>;
             interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
             clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
             clock-names = "uartclk", "apb_pclk";
         };
 
-        gic: interrupt-controller@10140000 {
+        gic: interrupt-controller@90140000 {
             compatible = "arm,gic-400";
             #interrupt-cells = <3>;
             #address-cells = <2>;
             #size-cells = <2>;
             interrupt-controller;
-            reg = <0x00000000 0x10140000 0x00000000 0x1000>, // GICD
-                  <0x00000000 0x10141000 0x00000000 0x2000>, // GICC
-                  <0x00000000 0x10143000 0x00000000 0x2000>, // GICVI
-                  <0x00000000 0x10145000 0x00000000 0x2000>; // GICVC
-            ranges;
+            reg = <0x00000000 0x90140000 0x00000000 0x1000>, // GICD
+                  <0x00000000 0x90141000 0x00000000 0x2000>, // GICC
+                  <0x00000000 0x90143000 0x00000000 0x2000>, // GICVI
+                  <0x00000000 0x90145000 0x00000000 0x2000>; // GICVC
+			interrupts = <GIC_PPI 9 0xf04>;
         };
 
-        lan0: lan9118@10010000 {
+        lan0: lan9118@90010000 {
             compatible = "smsc,lan9118", "smsc,lan9115";
-            reg = <0x0 0x10010000 0x0 0x10000>;
+            reg = <0x0 0x90010000 0x0 0x10000>;
             interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
             reg-io-width = <4>;
             phy-mode = "mii";
         };
 
-        sdhci: mmc@1000d000 {
+        sdhci: mmc@9000d000 {
             compatible = "fujitsu,mb86s70-sdhci-3.0";
-            reg = <0x0 0x1000d000 0x0 0x1000>;
+            reg = <0x0 0x9000d000 0x0 0x1000>;
             interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
             clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
             clock-names = "iface", "core";
         };
 
-        spi: spi@10020000 {
+        spi: spi@90020000 {
             #address-cells = <0x1>;
             #size-cells = <0x0>;
             compatible = "opencores,tiny-spi-rtlsvn2";
-            reg = <0x0 0x10020000 0x0 0x1000>;
+            reg = <0x0 0x90020000 0x0 0x1000>;
             interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
             cs-gpios = <&gpio0 0 GPIO_ACTIVE_LOW>;
             num-chipselects = <1>;
@@ -227,31 +234,18 @@
             };
         };
 
-        gpio0: gpio@1000f000 {
+        gpio0: gpio@9000f000 {
             compatible = "brcm,bcm6345-gpio";
-            reg = <0x0 0x1000f000 0x0 0x4>;
+            reg = <0x0 0x9000f000 0x0 0x4>;
             reg-names = "dat";
             gpio-controller;
             #gpio-cells = <2>;
         };
 
-        rtc0: rtc@1000e000 {
+        rtc0: rtc@9000e000 {
             compatible = "maxim,ds1742";
-            reg = <0x0 0x1000e000 0x0 0x800>;
+            reg = <0x0 0x9000e000 0x0 0x800>;
         };
-
-#if NVDLA == 1
-        nvdla: nvdla@10200000 {
-            compatible = "nvidia,nvdla_os_initial";
-            reg = <0x0 0x10200000 0x0 0x20000>;
-            interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
-        };
-
-        nvdlaextmem: extmem@C0000000 {
-            compatible = "nvidia,nvdla-extmem";
-            reg = <0x0 0xC0000000 0x0 0x40000000>;
-        };
-#endif
     };
 
     v2m_clk24mhz: clk24mhz {

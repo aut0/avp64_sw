@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 ##############################################################################
 #                                                                            #
 # Copyright 2024 Lukas Jünger, Nils Bosbach                                  #
@@ -16,21 +17,44 @@
 #                                                                            #
 ##############################################################################
 
-FROM ubuntu:jammy
-WORKDIR /app
-RUN apt-get update \
-	&& apt-get -y install build-essential \
-	libncurses-dev \
-	file \
-	wget \
-	cpio \
-	python3 \
-	unzip \
-	rsync \
-	bc \
-	git \
-	libssl-dev \
-	device-tree-compiler
-RUN wget "https://developer.arm.com/-/media/Files/downloads/gnu-a/9.2-2019.12/binrel/gcc-arm-9.2-2019.12-x86_64-aarch64-none-elf.tar.xz" && tar -xf gcc-arm-9.2-2019.12-x86_64-aarch64-none-elf.tar.xz && rm gcc-arm-9.2-2019.12-x86_64-aarch64-none-elf.tar.xz
-ENV PATH="/app/gcc-arm-9.2-2019.12-x86_64-aarch64-none-elf/bin:${PATH}"
-ENTRYPOINT ["/app/docker_entrypoint.sh"]
+
+SKIN_DIR=/app/build/buildroot/output/images/xen
+SW_DIR=${SKIN_DIR}/xen
+BINARIES_DIR_DOM0=/app/build/buildroot/output/dom0/images
+TARGET_DIR_DOM0=/app/build/buildroot/output/dom0/target
+
+rm -rf ${SKIN_DIR}
+mkdir -p ${SW_DIR}
+
+# copy config files
+cp /app/files/config/xen.cfg ${SW_DIR}/
+cp /app/files/config/xen-x*.cfg ${SKIN_DIR}/
+
+# copy image
+cp /app/build/buildroot/output/dom0/images/Image ${SW_DIR}
+gzip -f ${SW_DIR}/Image
+cp /app/build/buildroot/output/dom0/build/linux-4.19.4/vmlinux ${SW_DIR}/xen.elf
+cp /app/build/buildroot/output/dom0/images/xen ${SW_DIR}/xen.bin
+
+# generate sd card image
+GENIMAGE_TMP="${SW_DIR}/genimage.tmp"
+genimage \
+  --rootpath "${TARGET_DIR_DOM0}" \
+  --tmppath "${GENIMAGE_TMP}" \
+  --inputpath "${BINARIES_DIR_DOM0}" \
+  --outputpath "${SW_DIR}" \
+  --config "/app/files/genimage.cfg"
+rm -rf "${GENIMAGE_TMP}"
+
+# compile device trees
+LINUX_IMAGE_GZ="$SW_DIR/Image.gz"
+LINUX_IMAGE_SIZE="$(printf "0x%x\n" `stat -c "%s" $LINUX_IMAGE_GZ`)"
+make -C /app/files/dt O=${SW_DIR} LINUX_IMAGE_SIZE=$LINUX_IMAGE_SIZE
+
+# compile bootcode
+make -C /app/bootcode/xen_boot O=${SW_DIR}
+
+# create archive
+pushd ${SKIN_DIR} > /dev/null
+tar -czf /app/images/xen.tar.gz ./*
+popd > /dev/null

@@ -19,12 +19,16 @@
 
 set -euo pipefail
 
+export CURRENT_BUILD_VERSION=$2
+
 if [ "$1" == "build" ]; then
 	echo "Building AVP64 Linux buildroot"
 	# Run buildroot for linux
 	export BR2_DEFCONFIG=/app/files/avp64-linux-defconfig
 	make O=/app/build/buildroot/output/linux -C /app/buildroot/ defconfig
 	make O=/app/build/buildroot/output/linux -C /app/buildroot/ all
+	make O=/app/build/buildroot/output/linux -C /app/buildroot/ sdk
+	cp /app/build/buildroot/output/linux/images/aarch64-buildroot-linux-gnu_sdk-buildroot.tar.gz /app/images/
 elif [ "$1" == "clean" ]; then
 	echo "Cleaning AVP64 Linux buildroot"
 	# Clean buildroot for linux

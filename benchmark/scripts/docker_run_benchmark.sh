@@ -34,6 +34,7 @@ done
 DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 
 BENCHMARK_SRC_DIR=$DIR/../src
+IMAGES_DIR="$DIR/../../images"
 BUILD_DIR=$DIR/../BUILD
 
 DOCKER_FLAGS=""
@@ -46,10 +47,16 @@ else
     DOCKER_FLAGS="--user $(id -u):$(id -g)"
 fi
 
+mkdir -p "${BUILD_DIR}"
+mkdir -p "${IMAGES_DIR}"
+
 docker run \
     --rm \
     $DOCKER_FLAGS \
     -v "$BENCHMARK_SRC_DIR":/app/benchmark:ro,Z \
     -v "$BUILD_DIR":/app/build:Z \
+	-v "$IMAGES_DIR":/app/images:Z \
+    -v "$DIR/postprocess.bash":/app/postprocess.bash:ro,Z \
+    -v "$DIR/../config":/app/config:ro,Z \
     -v "$DIR/docker_entrypoint_benchmark.sh":/app/docker_entrypoint.sh:Z \
     avp64_benchmark $1 $2
