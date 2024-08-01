@@ -227,6 +227,28 @@
             };
         };
 
+        m_can0: can@10021000 {
+            compatible = "bosch,m_can";
+            reg = <0x0 0x10021000 0x0 0x1000>, <0x0 0x10022000 0x0 0x4000>;
+            reg-names = "m_can", "message_ram";
+            interrupts = <GIC_SPI  14 IRQ_TYPE_LEVEL_HIGH>,
+                         <GIC_SPI  15 IRQ_TYPE_LEVEL_HIGH>;
+            interrupt-names = "int0", "int1";
+            clocks = <&v2m_clk24mhz>,
+                     <&v2m_clk24mhz>;
+            clock-names = "hclk", "cclk";
+            bosch,mram-cfg = <
+                0x0
+                0  // 11-bit Filter	0-128 elements / 0-128 words
+                0  // 29-bit Filter	0-64  elements / 0-128 words
+                32 // Rx FIFO 0	    0-64  elements / 0-1152 words
+                0  // Rx FIFO 1	    0-64  elements / 0-1152 words
+                0  // Rx Buffers	0-64  elements / 0-1152 words
+                2  // Tx Event FIFO	0-32  elements / 0-64 words
+                2  // Tx Buffers	0-32  elements / 0-576 words
+            >;
+        };
+
         gpio0: gpio@1000f000 {
             compatible = "brcm,bcm6345-gpio";
             reg = <0x0 0x1000f000 0x0 0x4>;
