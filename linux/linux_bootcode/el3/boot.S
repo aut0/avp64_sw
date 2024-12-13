@@ -30,6 +30,29 @@ msr scr_el3, x0
 mov x0, #0b01001 // DAIF=0000
 msr spsr_el3, x0 // M[4:0]=01001 EL2h must match SCR_EL3.RW
 
+// initialize gic
+ldr x1, =gic_distif_addr
+ldr x2, [x1, #0x04] // read GICD_TYPER register
+tst x2, #(1 << 10) // if security features are not available
+beq gic_init_done // skip initalization
+
+// set all irq groups to 1
+and x2, x2, #0xF // x2=GICD_TYPER.ITLinesNumber
+add x2, x2, #1 // x2 hold the number of GICD_IGROUPR registers that need to be initialized
+add x3, x1, #0x80 // x3 holds the address of the GICD_IGROUPR0 register
+mov x4, #0xffffffff // value to write to the GICD_IGROUPR registers
+gic_set_groups:
+    str w4, [x3]
+    add x3, x3, #0x4
+    subs x2, x2, #1
+    b.ne gic_set_groups
+
+ldr x1, =gic_cpuif_addr
+mov x2, #0x80
+str w2, [x1, #0x04] // set pmr to 0x80
+
+gic_init_done:
+
 // Determine EL2 entry.
 adr x0, el2_entry // el2_entry points to the first instruction of
 msr elr_el3, x0 // EL2 code.
@@ -60,3 +83,5 @@ boot_kernel:
     br x4
 
 .set spin_addr, 0x00004000
+.set gic_distif_addr, 0x10140000
+.set gic_cpuif_addr, 0x10141000
