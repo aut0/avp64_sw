@@ -118,6 +118,29 @@
     chosen {
         bootargs = "earlycon console=ttyAMA0 root=/dev/mmcblk0p1 rootwait debug";
         stdout-path = "/amba/uart@10009000";
+
+        #address-cells = <2>;
+        #size-cells = <2>;
+        ranges;
+        fb0: framebuffer@20000000 {
+            compatible = "simple-framebuffer";
+            reg = <0x0 0x20000000 0x0 (1280*720*4)>;
+            width = <1280>;
+            height = <720>;
+            stride = <(1280*4)>;
+            format = "a8r8g8b8";
+        };
+    };
+
+    reserved-memory {
+        #address-cells = <2>;
+        #size-cells = <2>;
+        ranges;
+
+        framebuffer@20000000 {
+            reg = <0x0 0x20000000 0x0 0x400000>;
+            no-map;
+        };
     };
 
     memory@0 {
