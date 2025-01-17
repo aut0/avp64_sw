@@ -122,9 +122,9 @@
         #address-cells = <2>;
         #size-cells = <2>;
         ranges;
-        fb0: framebuffer@20000000 {
+        fb0: framebuffer@10200000 {
             compatible = "simple-framebuffer";
-            reg = <0x0 0x20000000 0x0 (1280*720*4)>;
+            reg = <0x0 0x10200000 0x0 (1280*720*4)>;
             width = <1280>;
             height = <720>;
             stride = <(1280*4)>;
@@ -132,15 +132,14 @@
         };
     };
 
-    reserved-memory {
-        #address-cells = <2>;
-        #size-cells = <2>;
-        ranges;
-
-        framebuffer@20000000 {
-            reg = <0x0 0x20000000 0x0 0x400000>;
-            no-map;
-        };
+    // fb1 needs to be outside the chosen node to be recognized by Linux
+    fb1: framebuffer@10600000 {
+        compatible = "simple-framebuffer";
+        reg = <0x0 0x10600000 0x0 (640*480*4)>;
+        width = <640>;
+        height = <480>;
+        stride = <(640*4)>;
+        format = "a8r8g8b8";
     };
 
     memory@0 {
@@ -283,6 +282,12 @@
         rtc0: rtc@1000e000 {
             compatible = "maxim,ds1742";
             reg = <0x0 0x1000e000 0x0 0x800>;
+        };
+
+        virtio0: virtio@10026000 {
+            compatible = "virtio,mmio";
+            reg = <0x0 0x10026000 0x0 0x1000>;
+            interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
         };
 
 #if NVDLA == 1
