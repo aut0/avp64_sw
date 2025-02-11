@@ -8,7 +8,7 @@ It was built at the [Institute for Communication Technologies and Embedded Syste
 
 ## Build
 
-1. To build `avp64_sw``, you need a working installation of [docker](https://docs.docker.com/engine/install/) or [podman](https://podman.io/).
+1. To build `avp64_sw`, you need a working installation of [docker](https://docs.docker.com/engine/install/) or [podman](https://podman.io/).
 
 1. Clone git repository:
 
