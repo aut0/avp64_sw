@@ -39,22 +39,12 @@ IMAGES_DIR="$DIR/../../../images"
 FILES_DIR="$DIR/../../files/"
 BUILD_DIR="$DIR/../../BUILD"
 
-DOCKER_FLAGS=""
-
-if [[ "$(docker --version)" == *"podman"* ]]; then
-    echo "Using podman"
-    DOCKER_FLAGS="--userns keep-id"
-else
-    echo "Using docker"
-    DOCKER_FLAGS="--user $(id -u):$(id -g)"
-fi
-
 mkdir -p "${BUILD_DIR}"
 mkdir -p "${IMAGES_DIR}"
 
-docker run \
+$CONTAINER_PROGRAM run \
     --rm \
-    $DOCKER_FLAGS \
+    $CONTAINER_PROGRAM_FLAGS \
 	-v "$BUILDROOT_DIR":/app/buildroot:Z \
 	-v "$BOOTCODE_DIR":/app/bootcode:ro,Z \
 	-v "$IMAGES_DIR":/app/images:Z \
