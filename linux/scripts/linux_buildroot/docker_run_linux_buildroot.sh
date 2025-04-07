@@ -37,6 +37,7 @@ BUILDROOT_DIR="$DIR/../../buildroot"
 BOOTCODE_DIR="$DIR/../../linux_bootcode"
 IMAGES_DIR="$DIR/../../../images"
 FILES_DIR="$DIR/../../files/"
+FB_LOGO_APP_DIR="$DIR/../../fb_logo_app/"
 BUILD_DIR="$DIR/../../BUILD"
 
 DOCKER_FLAGS=""
@@ -61,5 +62,6 @@ docker run \
 	-v "$FILES_DIR":/app/files:ro,Z \
 	-v "$BUILD_DIR":/app/build:Z \
 	-v "$FILES_DIR/overlay_$2":/app/overlay:ro,Z \
+	-v "$FB_LOGO_APP_DIR":/app/fb_logo_app:ro,Z \
 	-v "$DIR/docker_entrypoint_linux_buildroot.sh":/app/docker_entrypoint.sh:ro,Z \
 	avp64_linux_buildroot "$1" "$2"

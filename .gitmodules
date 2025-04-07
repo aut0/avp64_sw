@@ -10,3 +10,6 @@
 [submodule "xen/buildroot"]
 	path = xen/buildroot
 	url = https://github.com/buildroot/buildroot
+[submodule "linux/fb_logo_app/deps/pyvp"]
+	path = linux/fb_logo_app/deps/pyvp
+	url = https://github.com/machineware-gmbh/pyvp.git

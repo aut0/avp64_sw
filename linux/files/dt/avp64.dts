@@ -135,10 +135,10 @@
     // fb1 needs to be outside the chosen node to be recognized by Linux
     fb1: framebuffer@10600000 {
         compatible = "simple-framebuffer";
-        reg = <0x0 0x10600000 0x0 (640*480*4)>;
-        width = <640>;
-        height = <480>;
-        stride = <(640*4)>;
+        reg = <0x0 0x10600000 0x0 (768*768*4)>;
+        width = <768>;
+        height = <768>;
+        stride = <(768*4)>;
         format = "a8r8g8b8";
     };
 
