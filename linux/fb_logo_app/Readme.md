@@ -41,7 +41,7 @@ The [run.py](./run.py) script can be used to launch avp64, execute the `png_to_f
     ${AVP64_HOME}/lib/libocx-qemu-arm.so # the ocx-qemu-arm shared library
     ```
 
-1. Setup a python virtual environment
+1. Setup a Python virtual environment
 
     ```bash
     cd <avp64-sw-root>/linux/fb_logo_app
@@ -58,7 +58,7 @@ The [run.py](./run.py) script can be used to launch avp64, execute the `png_to_f
 
 You should see the boot output of avp64.
 The Python script uses [MachineWare's pyvp](https://github.com/machineware-gmbh/pyvp) to connect to avp64.
-The [pexpect](https://pexpect.readthedocs.io/en/stable/#) python package is used to start the avp64 process, handle the Linux login and run the `png_to_fb` application.
+The [pexpect](https://pexpect.readthedocs.io/en/stable/#) Python package is used to start the avp64 process, handle the Linux login and run the `png_to_fb` application.
 Then, pyvp requests a screenshot of the framebuffer.
 This screenshot is comapared against the golden model ([assets/system.fb1_ref.bmp](./assets/system.fb1_ref.bmp)).
 
