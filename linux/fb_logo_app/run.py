@@ -3,7 +3,6 @@
 import pexpect
 import sys
 import os
-import argparse
 
 from PIL import Image, ImageChops
 from deps.pyvp.vcml.session import Session
@@ -84,7 +83,7 @@ def main():
     process.sendline("/root/png_to_fb/png_to_fb /root/png_to_fb/mwr_logo.png /dev/fb1")
     process.expect("# ")
 
-    path = "./system.fb1.bmp"
+    path = os.path.abspath(os.path.join(file_dir, "system.fb1.bmp"))
     take_screenshot(session, path)
     test_pass = compare_images(path, os.path.join(file_dir, "assets", "system.fb1_ref.bmp"))
 
@@ -95,7 +94,7 @@ def main():
         print("test passed")
     else:
         print("test failed")
-    print("Screenshot: " + os.path.abspath(path))
+    print(f"Screenshot: {path}")
 
 
 if __name__ == "__main__":
