@@ -40,22 +40,14 @@ FILES_DIR="$DIR/../../files/"
 PNG_TO_FB_DIR="$DIR/../../png_to_fb/"
 BUILD_DIR="$DIR/../../BUILD"
 
-DOCKER_FLAGS=""
-
-if [[ "$(docker --version)" == *"podman"* ]]; then
-    echo "Using podman"
-    DOCKER_FLAGS="--userns keep-id"
-else
-    echo "Using docker"
-    DOCKER_FLAGS="--user $(id -u):$(id -g)"
-fi
-
 mkdir -p "${BUILD_DIR}"
 mkdir -p "${IMAGES_DIR}"
 
-docker run \
+source "$DIR/../../../common/setup.sh"
+
+$CONTAINER_PROGRAM run \
     --rm \
-    $DOCKER_FLAGS \
+    $CONTAINER_PROGRAM_FLAGS \
 	-v "$BUILDROOT_DIR":/app/buildroot:Z \
 	-v "$BOOTCODE_DIR":/app/bootcode:ro,Z \
 	-v "$IMAGES_DIR":/app/images:Z \

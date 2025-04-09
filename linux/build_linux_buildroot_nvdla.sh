@@ -31,6 +31,8 @@ while [ -h "$SOURCE" ]; do
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 
+source "$DIR/../common/setup.sh"
+
 # Build Linux buildroot
-docker build  --tag avp64_linux_buildroot "$DIR/scripts/linux_buildroot"
+$CONTAINER_PROGRAM build  --tag avp64_linux_buildroot "$DIR/scripts/linux_buildroot"
 "$DIR/scripts/linux_buildroot/docker_run_linux_buildroot.sh" build nvdla

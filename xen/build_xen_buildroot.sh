@@ -32,6 +32,9 @@ done
 DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 
 mkdir -p $DIR/BUILD
+
+source "$DIR/../common/setup.sh"
+
 # Build Xen rootfs
-docker build  --tag avp64_xen_buildroot "$DIR/scripts/xen_buildroot"
+$CONTAINER_PROGRAM build  --tag avp64_xen_buildroot "$DIR/scripts/xen_buildroot"
 "$DIR/scripts/xen_buildroot/docker_run_xen_buildroot.sh" build

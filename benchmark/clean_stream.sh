@@ -33,5 +33,7 @@ DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 
 mkdir -p $DIR/BUILD
 
-docker build  --tag avp64_benchmark "$DIR/scripts"
+source "$DIR/../common/setup.sh"
+
+$CONTAINER_PROGRAM build  --tag avp64_benchmark "$DIR/scripts"
 "$DIR/scripts/docker_run_benchmark.sh" clean stream
