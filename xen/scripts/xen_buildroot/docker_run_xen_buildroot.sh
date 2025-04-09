@@ -39,6 +39,8 @@ FILES_DIR="$DIR/../../files/"
 BUILD_DIR="$DIR/../../BUILD"
 IMAGES_DIR="$DIR/../../../images"
 
+source "$DIR/../common/setup.sh"
+
 $CONTAINER_PROGRAM run \
      --rm \
     $CONTAINER_PROGRAM_FLAGS \

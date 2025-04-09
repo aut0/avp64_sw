@@ -42,6 +42,8 @@ BUILD_DIR="$DIR/../../BUILD"
 mkdir -p "${BUILD_DIR}"
 mkdir -p "${IMAGES_DIR}"
 
+source "$DIR/../../../common/setup.sh"
+
 $CONTAINER_PROGRAM run \
     --rm \
     $CONTAINER_PROGRAM_FLAGS \
