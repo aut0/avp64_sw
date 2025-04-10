@@ -24,6 +24,7 @@ echo "Building png_to_fb"
 
 mkdir -p $APP_TARGET_DIR
 cp $PNG_TO_FB_DIR/assets/mwr_logo.png $APP_TARGET_DIR
+cp $PNG_TO_FB_DIR/assets/test_card.png $APP_TARGET_DIR
 
 pushd $PNG_TO_FB_DIR/src > /dev/null
 aarch64-buildroot-linux-gnu-g++ -o $APP_TARGET_DIR/png_to_fb png_to_fb.cpp -lpng -lz
