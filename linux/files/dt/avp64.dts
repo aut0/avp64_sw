@@ -150,9 +150,9 @@
     timer {
         compatible = "arm,armv8-timer", "arm,armv7-timer";
         interrupts = <GIC_PPI 13 0xFF04>, // GT_S
-                      <GIC_PPI 14 0xFF04>, // GT_NS
-                      <GIC_PPI 11 0xFF04>, // GT_VIRT
-                      <GIC_PPI 10 0xFF04>; // GT_HYP
+                     <GIC_PPI 14 0xFF04>, // GT_NS
+                     <GIC_PPI 11 0xFF04>, // GT_VIRT
+                     <GIC_PPI 10 0xFF04>; // GT_HYP
 
         clock-frequency = <1000000000>;
     };
@@ -253,8 +253,8 @@
             compatible = "bosch,m_can";
             reg = <0x0 0x10021000 0x0 0x1000>, <0x0 0x10022000 0x0 0x4000>;
             reg-names = "m_can", "message_ram";
-            interrupts = <GIC_SPI  14 IRQ_TYPE_LEVEL_HIGH>,
-                         <GIC_SPI  15 IRQ_TYPE_LEVEL_HIGH>;
+            interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
+                         <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
             interrupt-names = "int0", "int1";
             clocks = <&v2m_clk24mhz>,
                      <&v2m_clk24mhz>;

@@ -41,7 +41,7 @@ mkdir -p ${SW_DIR}
 
 # copy config files
 sed -e "s/%NAME%/${NAME}/g" /app/files/config/buildroot.cfg > ${SW_DIR}/${NAME}.cfg
-sed -i -e "s/^##config ${CONFIG} //g" ${SW_DIR}/${NAME}.cfg # commnet in lines that start with '##config ${CONFIG}'
+sed -i -e "s/^##config ${CONFIG} //g" ${SW_DIR}/${NAME}.cfg # comment in lines that start with '##config ${CONFIG}'
 sed -i '/^##config /d' ${SW_DIR}/${NAME}.cfg # remove all lines that start with ##config
 
 sed -e "s/%NAME%/${NAME}/g" /app/files/config/buildroot-x1.cfg > ${SKIN_DIR}/${NAME}-x1.cfg
