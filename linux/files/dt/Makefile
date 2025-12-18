@@ -16,29 +16,43 @@
 #                                                                            #
 ##############################################################################
 
-O   ?= .
-CPP ?= cpp
-DTC ?= dtc
-NVDLA ?= 0
+O      ?= .
+CPP    ?= cpp
+DTC    ?= dtc
+NVDLA  ?= 0
 
 CPUS := 1 2 4 8
 
 CPPFLAGS := -nostdinc -undef -x assembler-with-cpp
 
-OBJ := $(addprefix ${O}/avp64x,${CPUS:=.dtb})
+OUTDIR := $(O)
 
-all: $(OBJ)
+DTB := \
+  $(foreach c,$(CPUS),$(OUTDIR)/avp64x$(c).dtb) \
+  $(foreach c,$(CPUS),$(OUTDIR)/avp64x$(c)_minimal.dtb)
+
+all: $(DTB)
 
 clean:
-	$(RM) $(OBJ)
+	$(RM) $(DTB)
 
-${O}/%.dtb: ${O}/%.dts
-	@mkdir -p ${O}
+$(OUTDIR):
+	mkdir -p $@
+
+$(OUTDIR)/%.dtb: $(OUTDIR)/%.dts | $(OUTDIR)
 	$(DTC) -I dts -O dtb -o $@ $<
 
-${O}/avp64x%.dts: avp64.dts
-	@mkdir -p ${O}
-	$(CPP) $(CPPFLAGS) -D NRCPU=$* -D NVDLA=${NVDLA} -o $@ $<
+$(OUTDIR)/avp64x%.dts: avp64.dts | $(OUTDIR)
+	$(CPP) $(CPPFLAGS) \
+		-D NRCPU=$* \
+		-D NVDLA=$(NVDLA) \
+		-o $@ $<
+
+$(OUTDIR)/avp64x%_minimal.dts: avp64_minimal.dts | $(OUTDIR)
+	$(CPP) $(CPPFLAGS) \
+		-D NRCPU=$* \
+		-o $@ $<
 
 .PHONY: all clean
-.INTERMEDIATE: $(OBJ:dtb=dts)
+
+.INTERMEDIATE: $(DTB:.dtb=.dts)

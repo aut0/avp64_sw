@@ -40,14 +40,19 @@ rm -rf ${SKIN_DIR}
 mkdir -p ${SW_DIR}
 
 # copy config files
-sed -e "s/%NAME%/${NAME}/g" /app/files/config/buildroot.cfg > ${SW_DIR}/${NAME}.cfg
-sed -i -e "s/^##config ${CONFIG} //g" ${SW_DIR}/${NAME}.cfg # comment in lines that start with '##config ${CONFIG}'
-sed -i '/^##config /d' ${SW_DIR}/${NAME}.cfg # remove all lines that start with ##config
+for vp_variant in "" "_minimal"; do
+    template="/app/files/config/buildroot${vp_variant}.cfg"
+    base_cfg="${SW_DIR}/${NAME}${vp_variant}.cfg"
 
-sed -e "s/%NAME%/${NAME}/g" /app/files/config/buildroot-x1.cfg > ${SKIN_DIR}/${NAME}-x1.cfg
-sed -e "s/%NAME%/${NAME}/g" /app/files/config/buildroot-x2.cfg > ${SKIN_DIR}/${NAME}-x2.cfg
-sed -e "s/%NAME%/${NAME}/g" /app/files/config/buildroot-x4.cfg > ${SKIN_DIR}/${NAME}-x4.cfg
-sed -e "s/%NAME%/${NAME}/g" /app/files/config/buildroot-x8.cfg > ${SKIN_DIR}/${NAME}-x8.cfg
+    sed -e "s/%NAME%/${NAME}/g" "$template" > "$base_cfg" # Replace %NAME% placeholder
+    sed -i -e "s/^##config ${CONFIG} //g" "$base_cfg" # Uncomment lines that start with '##config ${CONFIG} '
+    sed -i '/^##config /d' "$base_cfg" # Remove all remaining lines that start with '##config '
+
+    for cores in 1 2 4 8; do
+        sed -e "s/%NAME%/${NAME}/g" "/app/files/config/buildroot-x${cores}${vp_variant}.cfg" > "${SKIN_DIR}/${NAME}-x${cores}${vp_variant}.cfg"
+    done
+done
+
 
 # copy image
 cp /app/build/buildroot/output/linux/images/vmlinux ${SW_DIR}/buildroot.elf

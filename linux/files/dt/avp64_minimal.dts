@@ -1,0 +1,203 @@
+/******************************************************************************
+ *                                                                            *
+ * Copyright 2025 Nils Bosbach                                                *
+ *                                                                            *
+ * Licensed under the Apache License, Version 2.0 (the "License");            *
+ * you may not use this file except in compliance with the License.           *
+ * You may obtain a copy of the License at                                    *
+ *                                                                            *
+ *     http://www.apache.org/licenses/LICENSE-2.0                             *
+ *                                                                            *
+ * Unless required by applicable law or agreed to in writing, software        *
+ * distributed under the License is distributed on an "AS IS" BASIS,          *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ * See the License for the specific language governing permissions and        *
+ * limitations under the License.                                             *
+ *                                                                            *
+ ******************************************************************************/
+
+#ifndef NRCPU
+#error NRCPU undefined
+#endif
+
+#define IRQ_TYPE_LEVEL_HIGH 4
+#define GIC_SPI 0
+#define GIC_PPI 1
+
+#define GPIO_ACTIVE_HIGH 0
+#define GPIO_ACTIVE_LOW 1
+
+/dts-v1/;
+
+/ {
+    model = "Foundation-v8A";
+    compatible = "arm,foundation-aarch64", "arm,vexpress";
+    interrupt-parent = <&gic>;
+    #address-cells = <2>;
+    #size-cells = <2>;
+
+    aliases {
+        serial0 = &v2m_serial0;
+    };
+
+    cpus {
+        #address-cells = <2>;
+        #size-cells = <0>;
+
+        cpu0: cpu@0 {
+            device_type = "cpu";
+            compatible = "arm,armv8";
+            reg = <0x0 0x0>;
+        };
+
+#if NRCPU > 1
+        cpu1: cpu@1 {
+            device_type = "cpu";
+            compatible = "arm,armv8";
+            enable-method = "spin-table";
+            cpu-release-addr = <0x0 0x00004000>;
+            reg = <0x0 0x1>;
+        };
+#if NRCPU > 2
+        cpu2: cpu@2 {
+            device_type = "cpu";
+            compatible = "arm,armv8";
+            enable-method = "spin-table";
+            cpu-release-addr = <0x0 0x00004000>;
+            reg = <0x0 0x2>;
+        };
+        cpu3: cpu@3 {
+            device_type = "cpu";
+            compatible = "arm,armv8";
+            enable-method = "spin-table";
+            cpu-release-addr = <0x0 0x00004000>;
+            reg = <0x0 0x3>;
+        };
+#if NRCPU > 4
+        cpu4: cpu@4 {
+            device_type = "cpu";
+            compatible = "arm,armv8";
+            enable-method = "spin-table";
+            cpu-release-addr = <0x0 0x00004000>;
+            reg = <0x0 0x4>;
+        };
+        cpu5: cpu@5 {
+            device_type = "cpu";
+            compatible = "arm,armv8";
+            enable-method = "spin-table";
+            cpu-release-addr = <0x0 0x00004000>;
+            reg = <0x0 0x5>;
+        };
+        cpu6: cpu@6 {
+            device_type = "cpu";
+            compatible = "arm,armv8";
+            enable-method = "spin-table";
+            cpu-release-addr = <0x0 0x00004000>;
+            reg = <0x0 0x6>;
+        };
+        cpu7: cpu@7 {
+            device_type = "cpu";
+            compatible = "arm,armv8";
+            enable-method = "spin-table";
+            cpu-release-addr = <0x0 0x00004000>;
+            reg = <0x0 0x7>;
+        };
+#endif // NRCPU > 4
+#endif // NRCPU > 2
+#endif // NRCPU > 1
+    };
+
+    chosen {
+        bootargs = "earlycon console=ttyAMA0 root=/dev/mmcblk0p1 rootwait debug";
+        stdout-path = "/amba/uart@10009000";
+
+        #address-cells = <2>;
+        #size-cells = <2>;
+        ranges;
+    };
+
+    memory@0 {
+        device_type= "memory";
+        reg = <0x0 0x00000000 0x0 0x10000000>;
+    };
+
+    timer {
+        compatible = "arm,armv8-timer", "arm,armv7-timer";
+        interrupts = <GIC_PPI 13 0xFF04>, // GT_S
+                     <GIC_PPI 14 0xFF04>, // GT_NS
+                     <GIC_PPI 11 0xFF04>, // GT_VIRT
+                     <GIC_PPI 10 0xFF04>; // GT_HYP
+
+        clock-frequency = <1000000000>;
+    };
+
+    amba {
+        #address-cells = <2>;
+        #size-cells = <2>;
+        compatible = "arm,amba-bus", "simple-bus";
+        ranges;
+
+        rng: rng@10007000 {
+            compatible = "timeriomem_rng";
+            reg = <0x0 0x10007000 0x0 0x4>;
+            quality = <1000>;
+            period = <0>;
+        };
+
+        v2m_serial0: uart@10009000 {
+            compatible = "arm,pl011", "arm,primecell";
+            reg = <0x0 0x10009000 0x0 0x1000>;
+            interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+            clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
+            clock-names = "uartclk", "apb_pclk";
+        };
+
+        gic: interrupt-controller@10140000 {
+            compatible = "arm,gic-400";
+            #interrupt-cells = <3>;
+            #address-cells = <2>;
+            #size-cells = <2>;
+            interrupt-controller;
+            reg = <0x00000000 0x10140000 0x00000000 0x1000>, // GICD
+                  <0x00000000 0x10141000 0x00000000 0x2000>, // GICC
+                  <0x00000000 0x10143000 0x00000000 0x2000>, // GICVI
+                  <0x00000000 0x10145000 0x00000000 0x2000>; // GICVC
+            ranges;
+        };
+
+        lan0: lan9118@10010000 {
+            compatible = "smsc,lan9118", "smsc,lan9115";
+            reg = <0x0 0x10010000 0x0 0x10000>;
+            interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+            reg-io-width = <4>;
+            phy-mode = "mii";
+        };
+
+        sdhci: mmc@1000d000 {
+            compatible = "fujitsu,mb86s70-sdhci-3.0";
+            reg = <0x0 0x1000d000 0x0 0x1000>;
+            interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+            clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
+            clock-names = "iface", "core";
+        };
+
+        rtc0: rtc@1000e000 {
+            compatible = "maxim,ds1742";
+            reg = <0x0 0x1000e000 0x0 0x800>;
+        };
+    };
+
+    v2m_clk24mhz: clk24mhz {
+        compatible = "fixed-clock";
+        #clock-cells = <0>;
+        clock-frequency = <24000000>;
+        clock-output-names = "v2m:clk24mhz", "iface", "core";
+    };
+
+    v2m_refclk1mhz: refclk1mhz {
+        compatible = "fixed-clock";
+        #clock-cells = <0>;
+        clock-frequency = <1000000>;
+        clock-output-names = "v2m:refclk1mhz";
+    };
+};
