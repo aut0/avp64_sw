@@ -13,3 +13,6 @@
 [submodule "linux/png_to_fb/deps/pyvp"]
 	path = linux/png_to_fb/deps/pyvp
 	url = https://github.com/machineware-gmbh/pyvp.git
+[submodule "zephyr"]
+	path = zephyr
+	url = https://github.com/nbosb/avp64_sw_zephyr.git
