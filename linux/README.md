@@ -3,6 +3,12 @@
 This directory contains configuration files and scripts to build a Buildroot-based Linux image for AVP64.
 Buildroot is a tool that automates the process of building Linux for embedded system platforms.
 
+**Linux login information:**
+
+**user:** root  
+**password:** root
+
+
 ## Build
 
 1. You can find the following build scripts:
@@ -50,7 +56,7 @@ Buildroot is a tool that automates the process of building Linux for embedded sy
 
     * Different Device Tree Blobs (.dtb files) with a binary representation of the hardware description.
       You can convert them into a human-readable text format using the device-tree compiler `dtc`.
-      On Ubuntu, `dtc` can be installt using:
+      On Ubuntu, `dtc` can be installed using:
 
       ```bash
       sudo apt-get install device-tree-compiler
@@ -62,7 +68,7 @@ Buildroot is a tool that automates the process of building Linux for embedded sy
       dtc -I dtb -O dts -o <name you choose>.dts <path to the .dtb>
       ```
 
-      Differnt device trees are compiled for differnt numbers of simulated cores (`avp64x1.dtb` for the single-core VP, `avp64x4` for the quad-core VP, ...).
+      Different device trees are compiled for different numbers of simulated cores (`avp64x1.dtb` for the single-core VP, `avp64x4` for the quad-core VP, ...).
 
     * boot.elf:
       An ELF-format version of the bootloader
@@ -79,17 +85,12 @@ Buildroot is a tool that automates the process of building Linux for embedded sy
       The VP configuration file
 
     * sdcard.img:
-      It contains one partitions that holds the root filesystem (with /bin, /etc, and /usr, ...).
+      It contains one partition that holds the root filesystem (with /bin, /etc, and /usr, ...).
 
-1. You can find a tarball that contains all needed build artifcats in the `<source-dir>/images` directory.
+1. You can find a tarball that contains all needed build artifacts in the `<source-dir>/images` directory.
     This tarball contains the VP configuration files and the needed software images.
 
 1. You can untar this tarball into the [avp64/sw](https://github.com/aut0/avp64/tree/master/sw) directory of your [avp64](https://github.com/aut0/avp64) project
-
-**Login information:**
-
-**user:** root  
-**password:** root
 
 ----
 
@@ -107,7 +108,7 @@ Ensure that the *executable* flag is set (`chmod +x <application path>`).
 To cross-compile applications, you can use the toolchain that is supplied by buildroot.
 You find a tarball in the `<source-dir>/images` folder (e.g., `aarch64-buildroot-linux-gnu_sdk-buildroot.tar.gz`).
 
-Don't forget to rebuild your image after you modified the overaly.
+Don't forget to rebuild your image after you modified the overlay.
 Hint: When you rebuild your image, buildroot copies all files from the overlay directory to the image.
 If you delete a file from the overlay directory and rebuild the image, the deleted files will **not** be removed from the image.
 The easiest solution in this case is to delete the `BUILD` folder and rebuild a clean image.
@@ -116,16 +117,16 @@ The easiest solution in this case is to delete the `BUILD` folder and rebuild a 
 
 ### Launch the application from a terminal
 
-1. Wait until the boot finished and login as root (pw: root)
+1. Wait until boot has finished and log in as root (pw: root)
 1. Navigate to the location of the application once you get a shell (`#`).
     If you placed the application in `/root`, you are already there.
 1. Run the application
 
 ### Create a service to automatically run an application
 
-If you'd like your application to automatically run after the boot finished without the user intervention, you can create an init script.
+If you'd like your application to automatically run after boot has finished without user intervention, you can create an init script.
 Init scripts are placed in `/etc/init.d` in the filesystem of the image and are automatically launched by `/sbin/init`.
-The init process uses the `/et/inittab` configuration file, which runs the `/etc/init.d/rcS` script.
+The init process uses the `/etc/inittab` configuration file, which runs the `/etc/init.d/rcS` script.
 This script executes all scripts in the `/etc/init.d/` directory whose name starts with `S`.
 The scripts are typically named `S[0-99]<purpose>`, e.g., `S40network` to enable the network device.
 The number is used to define the order in which the scripts are executed.

@@ -7,7 +7,7 @@ It was built at the [Institute for Communication Technologies and Embedded Syste
 
 ## Overview
 
-The following image can be built:
+The following images can be built:
 
 * [benchmark](./benchmark/): Baremetal benchmarks
   * **CoreMark:** CoreMark is a CPU benchmark developed by EEMBC that measures core processor performance using common embedded system workloads such as list processing, matrix manipulation, and state machines.
@@ -28,7 +28,7 @@ The following image can be built:
 
 1. To build `avp64_sw`, you need a working installation of [docker](https://docs.docker.com/engine/install/) or [podman](https://podman.io/).
 
-1. Clone git repository:
+1. Clone the git repository:
 
     ```bash
     git clone --recursive https://github.com/aut0/avp64_sw
@@ -36,8 +36,8 @@ The following image can be built:
 
 1. The directory used in this project is:
 
-    ```bash
-    <source-dir> location of your repo copy,  e.g. /home/lukas/avp64_sw
+    ```text
+    <source-dir> location of your repo copy, e.g. /home/lukas/avp64_sw
     ```
 
 ----
