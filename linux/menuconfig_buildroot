@@ -36,7 +36,7 @@ BUILDROOT_DIR="${DIR}/buildroot"
 cp "${BUILDROOT_CONFIG_FILE}" "${BUILDROOT_DIR}/.config"
 
 pushd "${BUILDROOT_DIR}" > /dev/null
-make menuconfig
+make nconfig
 popd > /dev/null
 
 cp "${BUILDROOT_DIR}/.config" "${BUILDROOT_CONFIG_FILE}"
