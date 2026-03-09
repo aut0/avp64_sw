@@ -17,7 +17,8 @@
 #                                                                            #
 ##############################################################################
 
-LINUX_VERSION=6.5.6
+KERNEL_DIR=$(ls -d $BUILD_DIR/linux-[0-9]*)
+LINUX_VERSION=${KERNEL_DIR##*-}
 CONFIG=$CURRENT_BUILD_VERSION
 BOARD_DIR="$(dirname $0)"
 GENIMAGE_CFG="${BOARD_DIR}/genimage.cfg"
