@@ -20,11 +20,11 @@
 set -euo pipefail
 
 export CURRENT_BUILD_VERSION=$2
+export BR2_DEFCONFIG=/app/files/avp64-buildroot-defconfig
 
 if [ "$1" == "build" ]; then
 	echo "Building AVP64 Linux buildroot"
 	# Run buildroot for linux
-	export BR2_DEFCONFIG=/app/files/avp64-linux-defconfig
 	make O=/app/build/buildroot/output/linux -C /app/buildroot/ defconfig
 	make O=/app/build/buildroot/output/linux -C /app/buildroot/ all
 	make O=/app/build/buildroot/output/linux -C /app/buildroot/ sdk
@@ -32,8 +32,16 @@ if [ "$1" == "build" ]; then
 elif [ "$1" == "clean" ]; then
 	echo "Cleaning AVP64 Linux buildroot"
 	# Clean buildroot for linux
-	export BR2_DEFCONFIG=/app/files/avp64-linux-defconfig
 	make O=/app/build/buildroot/output/linux -C /app/buildroot/ clean
+elif [ "$1" == "menuconfig" ]; then
+	make O=/app/build/buildroot/output/linux -C /app/buildroot/ defconfig
+	make O=/app/build/buildroot/output/linux -C /app/buildroot/ menuconfig
+	make O=/app/build/buildroot/output/linux -C /app/buildroot/ savedefconfig
+elif [ "$1" == "linux-menuconfig" ]; then
+	make O=/app/build/buildroot/output/linux -C /app/buildroot/ defconfig
+	make O=/app/build/buildroot/output/linux -C /app/buildroot/ linux-menuconfig
+	make O=/app/build/buildroot/output/linux -C /app/buildroot/ linux-savedefconfig
+	cp /app/build/buildroot/output/linux/build/linux-*/defconfig /app/files/avp64-linux-defconfig
 else
 	echo "Unsupported argument"
 fi

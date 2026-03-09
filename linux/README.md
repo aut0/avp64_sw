@@ -8,7 +8,6 @@ Buildroot is a tool that automates the process of building Linux for embedded sy
 **user:** root  
 **password:** root
 
-
 ## Build
 
 1. You can find the following build scripts:
@@ -38,7 +37,7 @@ Buildroot is a tool that automates the process of building Linux for embedded sy
 
     This will allow you to configure the Linux kernel.
     You can, e.g., select the drivers that are included, enable POSIX Message Queues, add profiling support, change the page size, endianness, and much more.
-    The configuration is stored in the [files/avp64_linux_kernel.config](./files/avp64_linux_kernel.config) file.
+    The configuration is stored in the [files/avp64-linux-defconfig](./files/avp64-linux-defconfig) file.
     Do not manually change this file.
     *After you changed the kernel config, re-execute `build_linux_buildroot.sh` for the changes to be applied.*
 

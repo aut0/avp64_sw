@@ -47,11 +47,12 @@ source "$DIR/../../../common/setup.sh"
 
 $CONTAINER_PROGRAM run \
     --rm \
+	-it \
     $CONTAINER_PROGRAM_FLAGS \
 	-v "$BUILDROOT_DIR":/app/buildroot:Z \
 	-v "$BOOTCODE_DIR":/app/bootcode:ro,Z \
 	-v "$IMAGES_DIR":/app/images:Z \
-	-v "$FILES_DIR":/app/files:ro,Z \
+	-v "$FILES_DIR":/app/files:Z \
 	-v "$BUILD_DIR":/app/build:Z \
 	-v "$FILES_DIR/overlay_$2":/app/overlay:ro,Z \
 	-v "$PNG_TO_FB_DIR":/app/png_to_fb:ro,Z \

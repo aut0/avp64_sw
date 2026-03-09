@@ -30,20 +30,7 @@ while [ -h "$SOURCE" ]; do
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 
-LINUX_CONFIG_FILE="${DIR}/files/avp64_linux_kernel.config"
-BUILDROOT_DIR="${DIR}/buildroot"
-LINUX_DIR="${BUILDROOT_DIR}/output/build/linux-6.5.6"
+source "$DIR/../common/setup.sh"
 
-if [ ! -d "${LINUX_DIR}" ]; then
-    pushd "${BUILDROOT_DIR}" > /dev/null
-    make linux-menuconfig
-    popd > /dev/null
-fi;
-
-cp "${LINUX_CONFIG_FILE}" "${LINUX_DIR}/.config"
-
-pushd "${LINUX_DIR}" > /dev/null
-make menuconfig ARCH=arm64
-popd > /dev/null
-
-cp "${LINUX_DIR}/.config" "${LINUX_CONFIG_FILE}"
+$CONTAINER_PROGRAM build  --tag avp64_linux_buildroot "$DIR/scripts/linux_buildroot"
+"$DIR/scripts/linux_buildroot/docker_run_linux_buildroot.sh" linux-menuconfig default
