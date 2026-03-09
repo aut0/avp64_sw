@@ -16,7 +16,7 @@
 #                                                                            #
 ##############################################################################
 
-FROM ubuntu:bionic
+FROM ubuntu:24.04
 WORKDIR /app
 RUN apt-get update \
 	&& apt-get -y install build-essential \
