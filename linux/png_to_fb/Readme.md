@@ -36,15 +36,15 @@ The [run.py](./run.py) script can be used to launch avp64, execute the `png_to_f
     The following paths should exist:
 
     ```bash
-    ${AVP64_HOME}/bin/avp64-runner # the avp64 executable
-    ${AVP64_HOME}/sw/buildroot_6_5_6-x1.cfg # the avp64 config file to execute the buildroot linux image created by this repository
+    ${AVP64_HOME}/bin/avp64 # the avp64 executable
+    ${AVP64_HOME}/sw/buildroot_6_18_7-x1.cfg # the avp64 config file to execute the buildroot linux image created by this repository
     ${AVP64_HOME}/lib/libocx-qemu-arm.so # the ocx-qemu-arm shared library
     ```
 
 1. Setup a Python virtual environment
 
     ```bash
-    cd <avp64-sw-root>/linux/fb_logo_app
+    cd <avp64-sw-root>/linux/png_to_fb
     python3 -m venv .venv # create venv
     source .venv/bin/activate # activate the venv
     pip3 install -r requirements.txt
@@ -66,5 +66,5 @@ After a successful run, you should see this result:
 
 ```text
 test passed
-Screenshot: <avp64-sw-root>/linux/fb_logo_app/system.fb1.bmp
+Screenshot: <avp64-sw-root>/linux/png_to_fb/system.fb1.bmp
 ```

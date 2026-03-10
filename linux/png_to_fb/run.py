@@ -56,8 +56,8 @@ def main():
         sys.exit(1)
 
     config = {
-        "executable": os.path.join(avp64_home, "bin", "avp64-runner"),
-        "cfg": os.path.join(avp64_home, "sw", "buildroot_6_5_6-x1.cfg"),
+        "executable": os.path.join(avp64_home, "bin", "avp64"),
+        "cfg": os.path.join(avp64_home, "sw", "buildroot_6_18_7-x1.cfg"),
         "session-port": 8888,
         "libpath": os.path.join(avp64_home, "lib")
     }
