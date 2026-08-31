@@ -17,11 +17,13 @@
 #                                                                            #
 ##############################################################################
 
-PNG_TO_FB_DIR=/app/png_to_fb
+TARGET_SW_DIR=/app/target_sw
+PNG_TO_FB_DIR=$TARGET_SW_DIR/png_to_fb
 APP_TARGET_DIR=$TARGET_DIR/root/png_to_fb
 
 echo "Building png_to_fb"
 
+rm -rf $APP_TARGET_DIR
 mkdir -p $APP_TARGET_DIR
 cp $PNG_TO_FB_DIR/assets/mwr_logo.png $APP_TARGET_DIR
 cp $PNG_TO_FB_DIR/assets/test_card.png $APP_TARGET_DIR
@@ -29,3 +31,17 @@ cp $PNG_TO_FB_DIR/assets/test_card.png $APP_TARGET_DIR
 pushd $PNG_TO_FB_DIR/src > /dev/null
 aarch64-buildroot-linux-gnu-g++ -o $APP_TARGET_DIR/png_to_fb png_to_fb.cpp -lpng -lz
 popd  > /dev/null
+
+
+echo "Building NPB suite"
+NPB_DIR=$TARGET_SW_DIR/NPB3.4-OMP
+NPB_TARGET_DIR=$TARGET_DIR/root/npb
+
+cd $NPB_DIR
+make suite
+
+rm -rf $NPB_TARGET_DIR
+mkdir -p $NPB_TARGET_DIR
+cp $NPB_DIR/bin/* $NPB_TARGET_DIR/
+
+make clean

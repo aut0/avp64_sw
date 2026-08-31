@@ -37,7 +37,7 @@ BUILDROOT_DIR="$DIR/../../buildroot"
 BOOTCODE_DIR="$DIR/../../linux_bootcode"
 IMAGES_DIR="$DIR/../../../images"
 FILES_DIR="$DIR/../../files/"
-PNG_TO_FB_DIR="$DIR/../../png_to_fb/"
+TARGET_SW_DIR="$DIR/../../target_sw/"
 BUILD_DIR="$DIR/../../BUILD"
 
 mkdir -p "${BUILD_DIR}"
@@ -55,6 +55,6 @@ $CONTAINER_PROGRAM run \
 	-v "$FILES_DIR":/app/files:Z \
 	-v "$BUILD_DIR":/app/build:Z \
 	-v "$FILES_DIR/overlay_$2":/app/overlay:ro,Z \
-	-v "$PNG_TO_FB_DIR":/app/png_to_fb:ro,Z \
+	-v "$TARGET_SW_DIR":/app/target_sw:Z \
 	-v "$DIR/docker_entrypoint_linux_buildroot.sh":/app/docker_entrypoint.sh:ro,Z \
 	avp64_linux_buildroot "$1" "$2"
